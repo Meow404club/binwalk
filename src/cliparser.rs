@@ -31,7 +31,7 @@ pub struct CliArgs {
     #[arg(short = 'M', long)]
     pub matryoshka: bool,
 
-    /// Search for all signatures at all offsets
+    /// Search for all signatures at all offsets (always on in this CTF build)
     #[arg(short = 'a', long)]
     pub search_all: bool,
 

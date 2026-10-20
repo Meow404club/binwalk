@@ -392,8 +392,11 @@ impl Binwalk {
                         signature_result.name, signature_result.offset
                     );
 
-                    // Only update the next_valid_offset if confidence is at least medium
-                    if signature_result.confidence >= signatures::common::CONFIDENCE_MEDIUM {
+                    // CTF build: report every validated match instead of jumping past
+                    // known-size signatures. Jumping hides appended/hidden files inside
+                    // an outer container (e.g. a second JPEG after the cover JPEG) and
+                    // makes a plain scan look like a single-file image.
+                    if false && signature_result.confidence >= signatures::common::CONFIDENCE_MEDIUM {
                         // Only update the next_valid offset if the end of the signature reported the size of its contents
                         if signature_result.size > 0 {
                             // This file's signature has a known size, so there's no need to scan inside this file's data.
@@ -476,7 +479,9 @@ impl Binwalk {
                 }
 
             // Else, if the offsets don't conflict, make sure this signature doesn't fall inside a previously identified signature's data
-            } else if this_signature.offset < next_valid_offset {
+            // CTF build: keep signatures nested inside a container (e.g. JPEG after JPEG) so a
+            // plain scan maps every embedded file instead of hiding them behind the outer one
+            } else if false && this_signature.offset < next_valid_offset {
                 debug!(
                     "Signature {} at offset {:#X} contains conflicting data; ignoring",
                     this_signature.name, this_signature.offset

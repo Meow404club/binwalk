@@ -100,7 +100,9 @@ fn main() -> ExitCode {
         cliargs.include,
         cliargs.exclude,
         None,
-        cliargs.search_all,
+        // CTF build: always search all signatures at all offsets so appended/hidden
+        // files show up on a plain scan instead of being masked by the outer file
+        true,
     ) {
         Err(e) => {
             error!("Binwalk initialization failed: {}", e.message);
